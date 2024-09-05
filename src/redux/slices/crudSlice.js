@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { v4 } from "uuid";
 
 const initialState = {
   tasks: [
@@ -23,9 +24,28 @@ const crudSlice = createSlice({
   name: "crud",
   initialState,
   reducers: {
-    addTask: (state, action) => {},
-    editTask: (state, action) => {},
-    removeTask: (state, action) => {},
+    addTask: (state, action) => {
+      state.tasks.push({
+        ...action.payload,
+        id: v4(),
+      });
+    },
+    editTask: (state, action) => {
+      const taskIndex = state.tasks.findIndex(
+        (task) => task.id === action.payload.id
+      );
+      if (taskIndex !== -1) {
+        state.tasks[taskIndex] = action.payload;
+      }
+    },
+    removeTask: (state, action) => {
+      const taskIndex = state.tasks.findIndex(
+        (task) => task.id === action.payload
+      );
+      if (taskIndex !== -1) {
+        state.tasks.splice(taskIndex, 1);
+      }
+    },
   },
 });
 
